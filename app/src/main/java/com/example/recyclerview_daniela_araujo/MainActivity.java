@@ -1,7 +1,8 @@
 package com.example.recyclerview_daniela_araujo;
-
-import android.annotation.SuppressLint;
 import android.os.Bundle;
+
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,7 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ContactoAdapter.OnItemClickListener {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,12 +27,12 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        //Instanciar el RecyclerView
+
+        // Instanciar el RecyclerView
         RecyclerView recyclerView = findViewById(R.id.recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-
-        //Crear conjunto de datos
+        // Crear conjunto de datos
         ArrayList<Contacto> listaContactos = new ArrayList<>(Arrays.asList(new Contacto[]{
                 new Contacto("Carlos", "Gonzalez", "gonzalezmalavasi@gmail.com", "555-1234", R.drawable.contacto_1),
                 new Contacto("María", "Matos", "marigabymatos@gmail.com", "555-5678", R.drawable.contacto_2),
@@ -42,9 +44,19 @@ public class MainActivity extends AppCompatActivity {
                 new Contacto("Martin", "Rodriguez", "martinrodri95@gmail.com", "555-2021", R.drawable.contacto_8),
                 new Contacto("Juan", "Fernández", "juan_fernandez@hotmail.com", "555-2223", R.drawable.contacto_9),
                 new Contacto("Elena", "Sánchez", "elenasrodriguez@hotmail.com", "555-2425", R.drawable.contacto_10)
+
         }));
-        //Crear el adaptador
-        ContactoAdapter contactoAdapter = new ContactoAdapter(this, listaContactos);
+
+        // Crear el adaptador
+        ContactoAdapter contactoAdapter = new ContactoAdapter(this, listaContactos, this);
         recyclerView.setAdapter(contactoAdapter);
     }
+
+    // Implementación del método onItemClick
+    @Override
+    public void onItemClick(View view, int position) {
+        Contacto contacto = ((ContactoAdapter) ((RecyclerView) findViewById(R.id.recycler)).getAdapter()).getItem(position);
+        Toast.makeText(this, "Contacto: " + contacto.getNombre() + " " + contacto.getApellidos(), Toast.LENGTH_SHORT).show();
+    }
+
 }

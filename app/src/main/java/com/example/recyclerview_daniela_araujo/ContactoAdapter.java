@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,15 +17,17 @@ public class ContactoAdapter extends RecyclerView.Adapter<ContactoAdapter.Contac
 
     private ArrayList<Contacto> contactos;
     private Context context;
+    private OnItemClickListener listener;
 
-    public ContactoAdapter(Context context, ArrayList<Contacto> contactos) {
+    public ContactoAdapter(Context context, ArrayList<Contacto> contactos, OnItemClickListener listener) {
         this.context = context;
         this.contactos = contactos;
+        this.listener = listener;
     }
 
     @NonNull
     @Override
-    public ContactoAdapter.ContactoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ContactoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new ContactoViewHolder(LayoutInflater.from(context).inflate(R.layout.item_contacto, parent, false));
     }
 
@@ -36,11 +39,26 @@ public class ContactoAdapter extends RecyclerView.Adapter<ContactoAdapter.Contac
         holder.email.setText(contacto.getEmail());
         holder.telefono.setText(contacto.getTelefono());
         holder.foto.setImageResource(contacto.getFoto());
+
+        // Enlazar el clic en cada elemento
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onItemClick(v, position);
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         return contactos.size();
+    }
+    public Contacto getItem(int position) {
+        return contactos.get(position);
+    }
+
+
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
     }
 
     public class ContactoViewHolder extends RecyclerView.ViewHolder {
